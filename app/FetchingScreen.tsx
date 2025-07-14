@@ -2,11 +2,11 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { get, ref, set } from 'firebase/database';
 import React, { useEffect } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import { db } from './firebaseConfig';
 
@@ -60,7 +60,7 @@ const FetchingScreen: React.FC<Props> = ({ route, navigation }) => {
     <View style={styles.outer}>
       <View style={styles.card}>
         <ActivityIndicator size="large" color="#4f46e5" style={styles.spinner} />
-        <Text style={styles.bigText}>Fetching patient data…</Text>
+        <Text style={styles.bigText}>Fetching Patient Data…</Text>
         <Text style={styles.subText}>
           Please wait while we check records for
           <Text style={styles.boldText}> {patientId}</Text>
