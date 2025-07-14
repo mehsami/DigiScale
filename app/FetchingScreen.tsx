@@ -60,7 +60,7 @@ const FetchingScreen: React.FC<Props> = ({ route, navigation }) => {
     <View style={styles.outer}>
       <View style={styles.card}>
         <ActivityIndicator size="large" color="#4f46e5" style={styles.spinner} />
-        <Text style={styles.bigText}>Fetching Patient Data…</Text>
+        <Text style={styles.bigText}>Fetching Patient Data!!!…</Text>
         <Text style={styles.subText}>
           Please wait while we check records for
           <Text style={styles.boldText}> {patientId}</Text>
