@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "scaleconnectapp",
+    "slug": "scaleconnectapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/DigiScaleIcon.png",
+    "scheme": "scaleconnectapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/DigiScaleLogo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.mehsami.scaleconnectapp"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/DigiScaleLogo.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/DigiScaleLogo.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      "react-native-ble-plx"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c4c462c3-92dc-4047-9feb-99533e716f2b"
+      }
+    },
+    "owner": "mehsami"
+  }
+}
