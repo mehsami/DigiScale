@@ -1,5 +1,8 @@
+import { ref, set } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { addRecentPatient } from '../recPatients';
+import { db } from './firebaseConfig'; // Update this path if needed!
 import Graph, { boysPercentiles, girlsPercentiles } from './Graph';
 
 type WeightData = Record<string, number>;
@@ -155,6 +158,40 @@ const PatientInfoAfter: React.FC<Props> = ({ route, navigation }) => {
   const gender = patientRecord.Gender === 'M' ? 'M' : 'F';
   const percentiles = gender === 'M' ? boysPercentiles : girlsPercentiles;
 
+  // --- FINALIZED: Save and Finish Handler ---
+  const handleSaveAndFinish = async () => {
+    try {
+      // Get the latest entry (already sorted by ageMonths)
+      const latest = weightEntries[weightEntries.length - 1];
+      if (latest) {
+        // Un-format to MMDDYYYY for the Firebase key (remove /)
+        const latestDateRaw = latest.date.replace(/\//g, '');
+        // Copy and update Weight object with the latest value
+        const updatedRecord = { ...patientRecord, Weight: { ...patientRecord.Weight } };
+        updatedRecord.Weight[latestDateRaw] = latest.weight;
+
+        // Save to Firebase
+        await set(ref(db, `patientId/${patientId}`), updatedRecord);
+
+        // Update recent patients locally
+        await addRecentPatient({
+          patientId,
+          name: `${patientRecord.First_Name} ${patientRecord.Last_Name}`,
+          dob: patientRecord.Date_of_Birth,
+          gender: patientRecord.Gender,
+          date: new Date().toISOString(),
+          village: patientRecord.Village,
+        });
+
+        navigation.navigate('Home');
+      } else {
+        Alert.alert('No Weight Data', 'No recent weight entry found to save.');
+      }
+    } catch (err: any) {
+      Alert.alert('Save Failed', err?.message || 'Could not save to database.');
+    }
+  };
+
   // Increase graph width and height for denser look
   const windowWidth = Dimensions.get('window').width;
   const CARD_HORIZONTAL_PADDING = 22;
@@ -220,11 +257,9 @@ const PatientInfoAfter: React.FC<Props> = ({ route, navigation }) => {
           ))
         )}
       </View>
-
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Home')}
-      >
+        onPress={handleSaveAndFinish}>
         <Text style={styles.buttonText}>Save and Finish</Text>
       </TouchableOpacity>
     </ScrollView>

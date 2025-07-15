@@ -38,53 +38,16 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
     }
     const convertedDOB = convertDOB(dob);
 
-    const patientRecord = {
+    // --- Only include fields that have values, and Weight is always empty on new entry ---
+    const patientRecord: any = {
       Date_of_Birth: convertedDOB,
       First_Name: firstName,
       Last_Name: lastName,
-      Gender: gender,
-      Village: village,
-      Phone_Number: 96789009, // placeholder example
-      Weight: {
-        "03032006": 3.3,   // Birth
-        "04032006": 4.5,   // 1 mo
-        "05032006": 5.6,   // 2 mo
-        "06032006": 6.4,   // 3 mo
-        "07032006": 7.0,   // 4 mo
-        "08032006": 7.5,   // 5 mo
-        "09032006": 7.9,   // 6 mo
-        "10032006": 8.3,   // 7 mo
-        "11032006": 8.6,   // 8 mo
-        "12032006": 8.9,   // 9 mo
-        "01032007": 9.2,   // 10 mo
-        "02032007": 9.4,   // 11 mo
-        "03032007": 9.6,   // 12 mo (1 yr)
-        "04032007": 9.9,   // 13 mo
-        "05032007": 10.1,  // 14 mo
-        "06032007": 10.3,  // 15 mo
-        "07032007": 10.5,  // 16 mo
-        "08032007": 10.7,  // 17 mo
-        "09032007": 10.9,  // 18 mo
-        "10032007": 11.1,  // 19 mo
-        "11032007": 11.3,  // 20 mo
-        "12032007": 11.5,  // 21 mo
-        "01032008": 11.8,  // 22 mo
-        "02032008": 12.0,  // 23 mo
-        "03032008": 12.2,  // 24 mo (2 yr)
-        "04032008": 12.4,  // 25 mo
-        "05032008": 12.5,  // 26 mo
-        "06032008": 12.7,  // 27 mo
-        "07032008": 12.9,  // 28 mo
-        "08032008": 13.1,  // 29 mo
-        "09032008": 13.3,  // 30 mo
-        "10032008": 13.5,  // 31 mo
-        "11032008": 13.7,  // 32 mo
-        "12032008": 13.8,  // 33 mo
-        "01032009": 14.0,  // 34 mo
-        "02032009": 14.2,  // 35 mo
-        "03032009": 14.3,  // 36 mo (3 yrs)
-      },
     };
+    if (gender) patientRecord.Gender = gender;
+    if (village) patientRecord.Village = village;
+    patientRecord.Phone_Number = 96789009; // or omit/set only if available
+    patientRecord.Weight = {}; // <-- Set to empty object for new entry
 
     navigation.navigate('Fetching', { patientId, patientRecord });
   };

@@ -2,7 +2,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import logo from '../assets/images/DigiScaleLogo.png';
 import BleScreen from './BleScreen';
@@ -13,8 +13,9 @@ import PatientInfo from './PatientInfo';
 import PatientInfoAfter from './PatientInfoAfter';
 import SettingsScreen from './SettingsScreen';
 
+import { getRecentPatients, RecentPatient } from '../recPatients'; // adjust path as needed
+import RecentPatientsScreen from './RecentPatientsScreen'; // your tab screen
 
-// Types for HomeStack navigation
 type HomeStackParamList = {
   Home: undefined;
   QRCode: undefined;
@@ -22,23 +23,33 @@ type HomeStackParamList = {
   ManualEntry: undefined;
   PatientInfo: { patientId: string; patientRecord: any };
   Weighing: { patientId: string; patientRecord: any };
-  PatientInfoAfter: { patientId: string; patientRecord: any; highlightWeightDate: string };
-  Fetching: { patientId: string; patientRecord: any }; // Add this
+  PatientInfoAfter: { patientId: string; patientRecord: any; highlightWeightDate?: string };
+  Fetching: { patientId: string };
 };
 
-// Types for Bottom Tab navigation
 type TabParamList = {
   Home: undefined;
   'Recent Patients': undefined;
   Settings: undefined;
 };
 
-// Home Screen Props
 type HomeScreenProps = {
-  navigation: StackNavigationProp<HomeStackParamList, 'Home'>;
+  navigation: StackNavigationProp<HomeStackParamList, 'Home'> & { navigate: any };
 };
 
 function HomeScreen({ navigation }: HomeScreenProps) {
+  const [recentPatients, setRecentPatients] = useState<RecentPatient[]>([]);
+
+  useEffect(() => {
+    const fetchRecents = async () => {
+      const recents = await getRecentPatients();
+      setRecentPatients(recents);
+    };
+    const unsubscribe = navigation.addListener('focus', fetchRecents);
+    fetchRecents();
+    return unsubscribe;
+  }, [navigation]);
+
   const OptionButton = ({
     color,
     icon,
@@ -101,8 +112,35 @@ function HomeScreen({ navigation }: HomeScreenProps) {
         />
       </View>
       <View style={styles.recentPatientsCard}>
-        <Text style={styles.recentPatientsTitle}>Recent Patients</Text>
-        <Text style={styles.recentPatientsEmpty}>No recent patients</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={styles.recentPatientsTitle}>Recent Patients</Text>
+          {recentPatients.length > 0 && (
+            <TouchableOpacity onPress={() => navigation.navigate('Recent Patients' as never)}>
+              <Text style={styles.seeAll}>See All</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        {recentPatients.length === 0 ? (
+          <Text style={styles.recentPatientsEmpty}>No recent patients</Text>
+        ) : (
+          recentPatients.slice(0, 3).map((p) => (
+            <TouchableOpacity
+              key={p.patientId}
+              style={styles.patientRow}
+              onPress={() =>
+                navigation.navigate('Fetching', { patientId: p.patientId })
+              }
+              activeOpacity={0.82}
+            >
+              <View>
+                <Text style={styles.patientName}>{p.name}</Text>
+                <Text style={styles.patientMeta}>DOB: {p.dob} | {p.gender || '-'}</Text>
+                {p.village && <Text style={styles.patientMeta}>Village: {p.village}</Text>}
+              </View>
+              <MaterialCommunityIcons name="chevron-right" size={22} color="#b4b8c2" />
+            </TouchableOpacity>
+          ))
+        )}
       </View>
       <StatusBar style="auto" />
     </ScrollView>
@@ -115,10 +153,6 @@ function QRCodeScreen() {
 
 function PassportScannerScreen() {
   return <View style={styles.centered}><Text>Passport Scanner Screen</Text></View>;
-}
-
-function RecentPatientsScreen() {
-  return <View style={styles.centered}><Text>Recent Patients</Text></View>;
 }
 
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -140,7 +174,6 @@ function HomeStackScreen() {
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
-// --- THIS IS WHERE YOU WRAP THE PROVIDER AROUND THE NAVIGATION ---
 export default function Home() {
   return (
     <BluetoothProvider>
@@ -235,9 +268,32 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     color: '#1e293b',
   },
+  seeAll: {
+    color: '#2563eb',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
   recentPatientsEmpty: {
     color: '#64748b',
     fontSize: 15,
     marginTop: 8,
+  },
+  patientRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 9,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f4f8',
+    justifyContent: 'space-between',
+  },
+  patientName: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#222a34',
+  },
+  patientMeta: {
+    color: '#7c8591',
+    fontSize: 13,
+    marginTop: 1,
   },
 });

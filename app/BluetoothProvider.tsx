@@ -24,3 +24,6 @@ export function useBluetooth() {
   if (!context) throw new Error("useBluetooth must be used within a BluetoothProvider");
   return context;
 }
+
+export default BluetoothProvider;
+

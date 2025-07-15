@@ -1,4 +1,3 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { get, ref, set } from 'firebase/database';
 import React, { useEffect } from 'react';
 import {
@@ -22,16 +21,19 @@ type PatientRecord = {
   Weight?: WeightData;
 };
 
-type RootStackParamList = {
-  Fetching: { patientId: string; patientRecord: PatientRecord };
-  PatientInfo: { patientId: string; patientRecord: PatientRecord };
-  Weighing: { patientId: string; patientRecord: PatientRecord };
+type Props = {
+  navigation: any;
+  route: {
+    params: {
+      patientId: string;
+      patientRecord?: PatientRecord; // optional now
+      highlightWeightDate?: string;  // optional for highlight feature
+    };
+  };
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Fetching'>;
-
 const FetchingScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { patientId, patientRecord } = route.params;
+  const { patientId, patientRecord, highlightWeightDate } = route.params;
 
   useEffect(() => {
     const run = async () => {
@@ -41,26 +43,43 @@ const FetchingScreen: React.FC<Props> = ({ route, navigation }) => {
         let freshRecord: PatientRecord;
 
         if (!snap.exists()) {
-          await set(patientRef, patientRecord);
-          freshRecord = patientRecord;
+          // Only create if we were passed a patientRecord (i.e. for new patients)
+          if (patientRecord) {
+            await set(patientRef, patientRecord);
+            freshRecord = patientRecord;
+          } else {
+            throw new Error('Patient not found and no record supplied.');
+          }
         } else {
           freshRecord = snap.val() as PatientRecord;
         }
 
-        navigation.replace('PatientInfo', { patientId, patientRecord: freshRecord });
+        // This is the only difference: route based on presence of patientRecord!
+        if (patientRecord) {
+          navigation.replace('PatientInfo', {
+            patientId,
+            patientRecord: freshRecord,
+          });
+        } else {
+          navigation.replace('PatientInfoAfter', {
+            patientId,
+            patientRecord: freshRecord,
+            highlightWeightDate: highlightWeightDate ?? undefined,
+          });
+        }
       } catch (err: any) {
         Alert.alert('Error', err.message || 'Failed during fetch/create');
         navigation.goBack();
       }
     };
     run();
-  }, [patientId, patientRecord, navigation]);
+  }, [patientId, patientRecord, highlightWeightDate, navigation]);
 
   return (
     <View style={styles.outer}>
       <View style={styles.card}>
         <ActivityIndicator size="large" color="#4f46e5" style={styles.spinner} />
-        <Text style={styles.bigText}>Fetching Patient Data!!!…</Text>
+        <Text style={styles.bigText}>Fetching patient data…</Text>
         <Text style={styles.subText}>
           Please wait while we check records for
           <Text style={styles.boldText}> {patientId}</Text>
