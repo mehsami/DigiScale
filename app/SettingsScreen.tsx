@@ -11,7 +11,11 @@ import {
 } from 'react-native';
 import { useBluetooth } from './BluetoothProvider'; // <-- updated import
 
-export default function SettingsScreen() {
+type Props = {
+  navigation: any;
+};
+
+export default function SettingsScreen({ navigation }: Props) {
   // Use shared BLE context instead of local hook
   const {
     requestPermissions,
@@ -20,7 +24,7 @@ export default function SettingsScreen() {
     connectToDevice,
     connectedDevice,
     disconnectFromDevice,
-  } = useBluetooth(); // <-- updated hook
+  } = useBluetooth();
 
   const isConnected = !!connectedDevice;
   const [isScanning, setIsScanning] = useState(false);
@@ -48,12 +52,10 @@ export default function SettingsScreen() {
 
       <View style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Bluetooth Settings</Text>
-
         <View style={styles.statusRow}>
           <Text style={isConnected ? styles.connected : styles.notConnected}>
             {isConnected ? `Paired Device: ${connectedDevice?.name || connectedDevice?.id}` : 'No device paired'}
           </Text>
-
           {!isConnected && !isScanning && (
             <TouchableOpacity style={styles.pairButton} onPress={handleScanPress}>
               <MaterialCommunityIcons
@@ -65,7 +67,6 @@ export default function SettingsScreen() {
               <Text style={styles.whiteButtonText}>Pair Device</Text>
             </TouchableOpacity>
           )}
-
           {!isConnected && isScanning && (
             <View style={{ width: '100%', marginTop: 12 }}>
               {allDevices.length > 0 ? (
@@ -85,7 +86,6 @@ export default function SettingsScreen() {
               )}
             </View>
           )}
-
           {isConnected && (
             <TouchableOpacity
               style={styles.unpairButton}
@@ -142,6 +142,21 @@ export default function SettingsScreen() {
         />
         <Text style={styles.whiteButtonText}>View Instructions Manual</Text>
       </TouchableOpacity>
+
+      {/* ----------- CHANGE LANGUAGE BUTTON ----------- */}
+      <TouchableOpacity
+        style={styles.instructionsButton}
+        onPress={() => navigation.navigate('Home',{screen:'ChooseLanguage'})}
+      >
+        <MaterialCommunityIcons
+          name="translate"
+          size={20}
+          color="#fff"
+          style={{ marginRight: 10 }}
+        />
+        <Text style={styles.whiteButtonText}>Change Language</Text>
+      </TouchableOpacity>
+      {/* ----------- END CHANGE LANGUAGE BUTTON ----------- */}
 
       <Modal
         animationType="slide"
@@ -261,7 +276,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingHorizontal: 16,
-    marginBottom: 40,
+    marginBottom: 20, // Updated for spacing
   },
   whiteButtonText: {
     fontSize: 17,

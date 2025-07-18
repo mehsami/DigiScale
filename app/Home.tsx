@@ -5,16 +5,16 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import logo from '../assets/images/DigiScaleLogo.png';
+import { getRecentPatients, RecentPatient } from '../recPatients';
 import BleScreen from './BleScreen';
 import { BluetoothProvider } from './BluetoothProvider';
+import ChooseLanguageScreen from './ChooseLanguageScreen';
 import FetchingScreen from './FetchingScreen';
 import ManualEntryScreen from './ManualEntry';
 import PatientInfo from './PatientInfo';
 import PatientInfoAfter from './PatientInfoAfter';
+import RecentPatientsScreen from './RecentPatientsScreen';
 import SettingsScreen from './SettingsScreen';
-
-import { getRecentPatients, RecentPatient } from '../recPatients'; // adjust path as needed
-import RecentPatientsScreen from './RecentPatientsScreen'; // your tab screen
 
 type HomeStackParamList = {
   Home: undefined;
@@ -25,6 +25,7 @@ type HomeStackParamList = {
   Weighing: { patientId: string; patientRecord: any };
   PatientInfoAfter: { patientId: string; patientRecord: any; highlightWeightDate?: string };
   Fetching: { patientId: string };
+  ChooseLanguage: undefined
 };
 
 type TabParamList = {
@@ -168,6 +169,7 @@ function HomeStackScreen() {
       <HomeStack.Screen name="PatientInfo" component={PatientInfo} />
       <HomeStack.Screen name="Weighing" component={BleScreen} />
       <HomeStack.Screen name="PatientInfoAfter" component={PatientInfoAfter} />
+      <HomeStack.Screen name="ChooseLanguage" component={ChooseLanguageScreen} />
     </HomeStack.Navigator>
   );
 }
