@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -9,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useBluetooth } from "./BluetoothProvider"; // <-- Changed
+import { useBluetooth } from "./BluetoothProvider";
 
 type Props = {
   route: {
@@ -22,9 +23,9 @@ type Props = {
 };
 
 function BleScreen({ route, navigation }: Props) {
+  const { t } = useTranslation();
   const { patientId, patientRecord } = route.params;
 
-  // Changed to useBluetooth
   const {
     requestPermissions,
     scanForPeripherals,
@@ -104,14 +105,14 @@ function BleScreen({ route, navigation }: Props) {
           ]}
         >
           <Text style={isConnected ? styles.connected : styles.notConnected}>
-            {isConnected ? "Connected" : "Not Connected"}
+            {isConnected ? t("ble.connected") : t("ble.notConnected")}
           </Text>
           {!isConnected && !isScanning && (
             <TouchableOpacity
               style={styles.connectBtnRed}
               onPress={handleConnectPress}
             >
-              <Text style={styles.connectBtnTextRed}>Connect Scale</Text>
+              <Text style={styles.connectBtnTextRed}>{t("ble.connectScale")}</Text>
             </TouchableOpacity>
           )}
           {!isConnected && isScanning && (
@@ -129,7 +130,7 @@ function BleScreen({ route, navigation }: Props) {
                   </TouchableOpacity>
                 ))
               ) : (
-                <Text style={styles.noDeviceText}>Scanning for devices...</Text>
+                <Text style={styles.noDeviceText}>{t("ble.scanning")}</Text>
               )}
             </View>
           )}
@@ -137,17 +138,17 @@ function BleScreen({ route, navigation }: Props) {
 
         <View style={styles.valueContainer}>
           <Text style={styles.valueText}>{displayWeight}</Text>
-          <Text style={styles.kgText}>kg</Text>
+          <Text style={styles.kgText}>{t("ble.kg")}</Text>
         </View>
 
         {manualMode && (
           <>
-            <Text style={styles.sectionLabel}>Manual Weight Entry</Text>
+            <Text style={styles.sectionLabel}>{t("ble.manualWeightEntry")}</Text>
             <TextInput
               style={styles.input}
               value={manualWeight}
               onChangeText={setManualWeight}
-              placeholder="Enter weight (kg)"
+              placeholder={t("ble.weightPlaceholder")}
               placeholderTextColor="#ccc"
               keyboardType="numeric"
               maxLength={6}
@@ -161,7 +162,7 @@ function BleScreen({ route, navigation }: Props) {
             onPress={() => setConfirmedWeight(String(displayWeight))}
             disabled={displayWeight === "--.--"}
           >
-            <Text style={styles.actionBtnText}>Accept Measurement</Text>
+            <Text style={styles.actionBtnText}>{t("ble.acceptMeasurement")}</Text>
           </TouchableOpacity>
         )}
 
@@ -170,7 +171,7 @@ function BleScreen({ route, navigation }: Props) {
             style={styles.actionBtn}
             onPress={() => setManualMode(true)}
           >
-            <Text style={styles.actionBtnText}>Enter Weight Manually</Text>
+            <Text style={styles.actionBtnText}>{t("ble.enterWeightManually")}</Text>
           </TouchableOpacity>
         )}
 
@@ -182,20 +183,20 @@ function BleScreen({ route, navigation }: Props) {
               setManualWeight("");
             }}
           >
-            <Text style={styles.secondaryBtnText}>Use Scale Instead</Text>
+            <Text style={styles.secondaryBtnText}>{t("ble.useScaleInstead")}</Text>
           </TouchableOpacity>
         )}
 
         {confirmedWeight && (
           <View style={styles.confirmedBox}>
             <Text style={styles.confirmedText}>
-              Measurement Accepted: {confirmedWeight} kg
+              {t("ble.measurementAccepted", { weight: confirmedWeight })}
             </Text>
             <TouchableOpacity
               style={styles.secondaryBtn}
               onPress={proceedToGraphing}
             >
-              <Text style={styles.secondaryBtnText}>Proceed to Graphing</Text>
+              <Text style={styles.secondaryBtnText}>{t("ble.proceedToGraphing")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.secondaryBtn}
@@ -205,7 +206,7 @@ function BleScreen({ route, navigation }: Props) {
                 setManualWeight("");
               }}
             >
-              <Text style={styles.secondaryBtnText}>Redo Measurement</Text>
+              <Text style={styles.secondaryBtnText}>{t("ble.redoMeasurement")}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -220,7 +221,7 @@ function BleScreen({ route, navigation }: Props) {
               setConfirmedWeight(null);
             }}
           >
-            <Text style={styles.repairBtnText}>Restart Pairing</Text>
+            <Text style={styles.repairBtnText}>{t("ble.restartPairing")}</Text>
           </TouchableOpacity>
         )}
       </ScrollView>

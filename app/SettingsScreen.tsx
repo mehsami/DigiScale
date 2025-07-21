@@ -1,5 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Modal,
   ScrollView,
@@ -9,14 +10,14 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { useBluetooth } from './BluetoothProvider'; // <-- updated import
+import { useBluetooth } from './BluetoothProvider';
 
 type Props = {
   navigation: any;
 };
 
 export default function SettingsScreen({ navigation }: Props) {
-  // Use shared BLE context instead of local hook
+  const { t } = useTranslation();
   const {
     requestPermissions,
     scanForPeripherals,
@@ -43,18 +44,27 @@ export default function SettingsScreen({ navigation }: Props) {
   };
 
   const handleSaveSMSInfo = () => {
-    alert(`Saved:\nPhone: ${phoneNumber}\nAuth Code: ${authCode}`);
+    alert(
+      t('settings.savedSMSInfoAlert', {
+        phone: phoneNumber,
+        authCode: authCode
+      })
+    );
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Settings</Text>
+      <Text style={styles.title}>{t('settings.title')}</Text>
 
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>Bluetooth Settings</Text>
+        <Text style={styles.sectionTitle}>{t('settings.bluetoothSettings')}</Text>
         <View style={styles.statusRow}>
           <Text style={isConnected ? styles.connected : styles.notConnected}>
-            {isConnected ? `Paired Device: ${connectedDevice?.name || connectedDevice?.id}` : 'No device paired'}
+            {isConnected
+              ? t('settings.pairedDevice', {
+                  name: connectedDevice?.name || connectedDevice?.id
+                })
+              : t('settings.noDevicePaired')}
           </Text>
           {!isConnected && !isScanning && (
             <TouchableOpacity style={styles.pairButton} onPress={handleScanPress}>
@@ -64,7 +74,7 @@ export default function SettingsScreen({ navigation }: Props) {
                 color="#fff"
                 style={{ marginRight: 10 }}
               />
-              <Text style={styles.whiteButtonText}>Pair Device</Text>
+              <Text style={styles.whiteButtonText}>{t('settings.pairDevice')}</Text>
             </TouchableOpacity>
           )}
           {!isConnected && isScanning && (
@@ -82,7 +92,7 @@ export default function SettingsScreen({ navigation }: Props) {
                   </TouchableOpacity>
                 ))
               ) : (
-                <Text style={styles.noDeviceText}>Scanning for devices...</Text>
+                <Text style={styles.noDeviceText}>{t('settings.scanningForDevices')}</Text>
               )}
             </View>
           )}
@@ -97,29 +107,29 @@ export default function SettingsScreen({ navigation }: Props) {
                 color="#fff"
                 style={{ marginRight: 10 }}
               />
-              <Text style={styles.whiteButtonText}>Unpair Device</Text>
+              <Text style={styles.whiteButtonText}>{t('settings.unpairDevice')}</Text>
             </TouchableOpacity>
           )}
         </View>
       </View>
 
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>SMS Settings</Text>
-        <Text style={styles.label}>Phone Number</Text>
+        <Text style={styles.sectionTitle}>{t('settings.smsSettings')}</Text>
+        <Text style={styles.label}>{t('settings.phoneNumber')}</Text>
         <TextInput
           style={styles.input}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
-          placeholder="Enter phone number"
+          placeholder={t('settings.phoneNumberPlaceholder')}
           placeholderTextColor="#888"
         />
-        <Text style={styles.label}>Authentication Code</Text>
+        <Text style={styles.label}>{t('settings.authCode')}</Text>
         <TextInput
           style={styles.input}
           value={authCode}
           onChangeText={setAuthCode}
-          placeholder="Enter auth code"
+          placeholder={t('settings.authCodePlaceholder')}
           placeholderTextColor="#888"
         />
         <TouchableOpacity style={styles.saveButton} onPress={handleSaveSMSInfo}>
@@ -129,7 +139,7 @@ export default function SettingsScreen({ navigation }: Props) {
             color="#333"
             style={{ marginRight: 10 }}
           />
-          <Text style={styles.subtleButtonText}>Save SMS Info</Text>
+          <Text style={styles.subtleButtonText}>{t('settings.saveSMSInfo')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -140,13 +150,13 @@ export default function SettingsScreen({ navigation }: Props) {
           color="#fff"
           style={{ marginRight: 10 }}
         />
-        <Text style={styles.whiteButtonText}>View Instructions Manual</Text>
+        <Text style={styles.whiteButtonText}>{t('settings.viewInstructions')}</Text>
       </TouchableOpacity>
 
       {/* ----------- CHANGE LANGUAGE BUTTON ----------- */}
       <TouchableOpacity
         style={styles.instructionsButton}
-        onPress={() => navigation.navigate('Home',{screen:'ChooseLanguage'})}
+        onPress={() => navigation.navigate('Home', { screen: 'ChooseLanguage' })}
       >
         <MaterialCommunityIcons
           name="translate"
@@ -154,7 +164,7 @@ export default function SettingsScreen({ navigation }: Props) {
           color="#fff"
           style={{ marginRight: 10 }}
         />
-        <Text style={styles.whiteButtonText}>Change Language</Text>
+        <Text style={styles.whiteButtonText}>{t('settings.changeLanguage')}</Text>
       </TouchableOpacity>
       {/* ----------- END CHANGE LANGUAGE BUTTON ----------- */}
 
@@ -166,13 +176,10 @@ export default function SettingsScreen({ navigation }: Props) {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Instructions Manual</Text>
+            <Text style={styles.modalTitle}>{t('settings.instructionsManual')}</Text>
             <ScrollView style={{ maxHeight: 250, marginVertical: 10 }}>
               <Text style={styles.modalText}>
-                The healthcare provider should enter the patient's info first.{"\n\n"}
-                The user will then see previous data and proceed to weighing after pairing the scale.{"\n\n"}
-                As they weigh, they can save data using their phone and plot it to view analytics.{"\n\n"}
-                The data will automatically upload and be saved for later cases.
+                {t('settings.instructionsManualText')}
               </Text>
             </ScrollView>
             <TouchableOpacity
@@ -184,7 +191,9 @@ export default function SettingsScreen({ navigation }: Props) {
                 size={24}
                 color="#2563eb"
               />
-              <Text style={[styles.buttonText, { marginLeft: 8, color: '#2563eb' }]}>Close</Text>
+              <Text style={[styles.buttonText, { marginLeft: 8, color: '#2563eb' }]}>
+                {t('settings.close')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

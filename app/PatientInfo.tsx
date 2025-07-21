@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Graph, { boysPercentiles, girlsPercentiles } from './Graph';
 
 type WeightData = Record<string, number>;
 
 type PatientRecord = {
-  Date_of_Birth: string;  // e.g. "4032006" (mmddyyyy without slashes)
+  Date_of_Birth: string;
   First_Name: string;
   Last_Name: string;
   Gender?: string;
@@ -66,6 +67,7 @@ const formatDateKey = (key: string): string => {
 };
 
 const PatientInfo: React.FC<Props> = ({ route, navigation }) => {
+  const { t } = useTranslation();
   const { patientId, patientRecord } = route.params;
   const [weightEntries, setWeightEntries] = useState<{ date: string; weight: number }[]>([]);
   const [patientWeights, setPatientWeights] = useState<{ ageMonths: number; weight: number }[]>([]);
@@ -90,27 +92,27 @@ const PatientInfo: React.FC<Props> = ({ route, navigation }) => {
 
   // Increase graph width and height for denser look
   const windowWidth = Dimensions.get('window').width;
-  const CARD_HORIZONTAL_PADDING = 22;    // from sectionCard style
-  const SCREEN_HORIZONTAL_PADDING = 16;  // from scrollContainer style
+  const CARD_HORIZONTAL_PADDING = 22;
+  const SCREEN_HORIZONTAL_PADDING = 16;
   const GRAPH_WIDTH = windowWidth - 2 * SCREEN_HORIZONTAL_PADDING - 2 * CARD_HORIZONTAL_PADDING + 60;
   const GRAPH_HEIGHT = 450;
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>Patient Details</Text>
-        <DetailRow label="Patient ID" value={patientId} />
-        <DetailRow label="First Name" value={patientRecord.First_Name} />
-        <DetailRow label="Last Name" value={patientRecord.Last_Name} />
-        <DetailRow label="Date of Birth" value={patientRecord.Date_of_Birth} />
-        <DetailRow label="Village" value={patientRecord.Village || '-'} />
-        <DetailRow label="Gender" value={patientRecord.Gender || '-'} />
-        <DetailRow label="Phone Number" value={patientRecord.Phone_Number?.toString() || '-'} />
+        <Text style={styles.sectionTitle}>{t('patientInfo.title')}</Text>
+        <DetailRow label={t('patientInfo.patientId')} value={patientId} />
+        <DetailRow label={t('patientInfo.firstName')} value={patientRecord.First_Name} />
+        <DetailRow label={t('patientInfo.lastName')} value={patientRecord.Last_Name} />
+        <DetailRow label={t('patientInfo.dateOfBirth')} value={patientRecord.Date_of_Birth} />
+        <DetailRow label={t('patientInfo.village')} value={patientRecord.Village || '-'} />
+        <DetailRow label={t('patientInfo.gender')} value={patientRecord.Gender || '-'} />
+        <DetailRow label={t('patientInfo.phoneNumber')} value={patientRecord.Phone_Number?.toString() || '-'} />
       </View>
 
       <View style={styles.chartCard}>
-        <View style={{width: '100%', alignItems: 'center'}}>
-          <Text style={styles.sectionTitle}>Growth Chart</Text>
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          <Text style={styles.sectionTitle}>{t('patientInfo.growthChart')}</Text>
         </View>
         <Graph
           patientWeights={patientWeights}
@@ -123,9 +125,9 @@ const PatientInfo: React.FC<Props> = ({ route, navigation }) => {
       </View>
 
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>Previous Weight Records</Text>
+        <Text style={styles.sectionTitle}>{t('patientInfo.previousWeights')}</Text>
         {weightEntries.length === 0 ? (
-          <Text style={styles.empty}>No previous weight data found.</Text>
+          <Text style={styles.empty}>{t('patientInfo.noWeights')}</Text>
         ) : (
           weightEntries.map(({ date, weight }, idx) => (
             <View key={idx} style={styles.weightRow}>
@@ -140,13 +142,13 @@ const PatientInfo: React.FC<Props> = ({ route, navigation }) => {
         style={styles.button}
         onPress={() => navigation.navigate('Weighing', { patientId, patientRecord })}
       >
-        <Text style={styles.buttonText}>Continue to Weighing</Text>
+        <Text style={styles.buttonText}>{t('patientInfo.continueToWeighing')}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.button, styles.secondaryButton]}
         onPress={() => navigation.goBack()}
       >
-        <Text style={styles.buttonText}>Edit Patient Info</Text>
+        <Text style={styles.buttonText}>{t('patientInfo.editInfo')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -192,7 +194,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 18,
     color: '#222',
-    // Do NOT include textAlign: 'center'!
   },
   detailRow: {
     flexDirection: 'row',

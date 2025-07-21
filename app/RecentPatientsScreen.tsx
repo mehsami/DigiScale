@@ -1,20 +1,21 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { getRecentPatients, RecentPatient } from '../recPatients'; // adjust path if needed
+import { getRecentPatients, RecentPatient } from '../recPatients';
 
 type Props = {
   navigation: any;
 };
 
 const RecentPatientsScreen: React.FC<Props> = ({ navigation }) => {
+  const { t } = useTranslation();
   const [patients, setPatients] = useState<RecentPatient[]>([]);
 
   useEffect(() => {
     const fetchPatients = async () => {
       setPatients(await getRecentPatients());
     };
-    // Refresh list when screen is focused
     const unsub = navigation.addListener('focus', fetchPatients);
     fetchPatients();
     return unsub;
@@ -22,9 +23,9 @@ const RecentPatientsScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Recent Patients</Text>
+      <Text style={styles.title}>{t('recentPatientsScreen.title')}</Text>
       {patients.length === 0 ? (
-        <Text style={styles.empty}>No recent patients found.</Text>
+        <Text style={styles.empty}>{t('recentPatientsScreen.empty')}</Text>
       ) : (
         patients.map((p) => (
           <TouchableOpacity
@@ -50,7 +51,7 @@ const RecentPatientsScreen: React.FC<Props> = ({ navigation }) => {
         ))
       )}
       <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-        <Text style={styles.buttonText}>Back</Text>
+        <Text style={styles.buttonText}>{t('recentPatientsScreen.back')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

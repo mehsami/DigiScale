@@ -1,5 +1,6 @@
 import { get, ref, set } from 'firebase/database';
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Alert,
@@ -26,13 +27,14 @@ type Props = {
   route: {
     params: {
       patientId: string;
-      patientRecord?: PatientRecord; // optional now
-      highlightWeightDate?: string;  // optional for highlight feature
+      patientRecord?: PatientRecord;
+      highlightWeightDate?: string;
     };
   };
 };
 
 const FetchingScreen: React.FC<Props> = ({ route, navigation }) => {
+  const { t } = useTranslation();
   const { patientId, patientRecord, highlightWeightDate } = route.params;
 
   useEffect(() => {
@@ -43,18 +45,16 @@ const FetchingScreen: React.FC<Props> = ({ route, navigation }) => {
         let freshRecord: PatientRecord;
 
         if (!snap.exists()) {
-          // Only create if we were passed a patientRecord (i.e. for new patients)
           if (patientRecord) {
             await set(patientRef, patientRecord);
             freshRecord = patientRecord;
           } else {
-            throw new Error('Patient not found and no record supplied.');
+            throw new Error(t('fetching.patientNotFound'));
           }
         } else {
           freshRecord = snap.val() as PatientRecord;
         }
 
-        // This is the only difference: route based on presence of patientRecord!
         if (patientRecord) {
           navigation.replace('PatientInfo', {
             patientId,
@@ -68,20 +68,20 @@ const FetchingScreen: React.FC<Props> = ({ route, navigation }) => {
           });
         }
       } catch (err: any) {
-        Alert.alert('Error', err.message || 'Failed during fetch/create');
+        Alert.alert(t('fetching.errorTitle'), err.message || t('fetching.errorFallback'));
         navigation.goBack();
       }
     };
     run();
-  }, [patientId, patientRecord, highlightWeightDate, navigation]);
+  }, [patientId, patientRecord, highlightWeightDate, navigation, t]);
 
   return (
     <View style={styles.outer}>
       <View style={styles.card}>
         <ActivityIndicator size="large" color="#4f46e5" style={styles.spinner} />
-        <Text style={styles.bigText}>Fetching patient data…</Text>
+        <Text style={styles.bigText}>{t('fetching.title')}</Text>
         <Text style={styles.subText}>
-          Please wait while we check records for
+          {t('fetching.subText')}
           <Text style={styles.boldText}> {patientId}</Text>
         </Text>
       </View>

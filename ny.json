@@ -1,4 +1,134 @@
 {
-  "welcome": "Takulandilani",
-  "choose_language": "Sankhani chilankhulo chanu"
+  "choose_language": "Sankhani Chiyankhulo",
+  "welcome": "Takulandirani",
+  "home": {
+    "appName": "DigiScale",
+    "subtitle": "Kuyang'anira Kukula kwa Ana",
+    "scanBarcode": "Skani Barcode",
+    "scanPassport": "Skani Pasipoti",
+    "manualEntry": "Lembani Nokha",
+    "voiceEntry": "Lowetsani Ndi Mawu",
+    "recentPatients": "Odwala Apano",
+    "seeAll": "Onani Zonse",
+    "noRecentPatients": "Palibe Odwala Apano",
+    "dobGender": "DOB: {{dob}} | {{gender}}",
+    "village": "Mudzi: {{village}}",
+    "tabHome": "Home",
+    "tabRecentPatients": "Odwala",
+    "tabSettings": "Ma Settings",
+    "qrCodeScreen": "QR Code Screen",
+    "passportScannerScreen": "Pasipoti Scanner"
+  },
+
+  "manualEntry": {
+    "title": "Zambiri za Odwala",
+    "proceed": "Pitilizani",
+    "errorTitle": "Vuto",
+    "errorMessage": "Chonde lowetsani ID ya Odwala, Dzina Loyamba, ndi Dzina Lomaliza zofunikira",
+    "patientName": "Dzina la Odwala",
+    "firstName": "Dzina Loyamba",
+    "firstNamePlaceholder": "Mwachitsanzo: Peter",
+    "lastName": "Dzina Lomaliza",
+    "lastNamePlaceholder": "Mwachitsanzo: Banda",
+    "patientId": "Patient ID",
+    "patientIdPlaceholder": "Mwachitsanzo: P001",
+    "dateOfBirth": "Tsiku Lobadwa",
+    "dobPlaceholder": "Mwachitsanzo: 04/07/2025",
+    "village": "Mudzi",
+    "villagePlaceholder": "Mwachitsanzo: Chikwawa",
+    "gender": "Gender",
+    "genderPlaceholder": "M (Mwamuna) kapena F (Kazi)"
+  },
+
+  "settings": {
+    "title": "Ma Settings",
+    "bluetoothSettings": "Bluetooth Settings",
+    "pairedDevice": "Device: {{name}}",
+    "noDevicePaired": "Palibe device",
+    "pairDevice": "Pair Device",
+    "unpairDevice": "Unpair",
+    "scanningForDevices": "Sikilani...",
+    "smsSettings": "SMS Settings",
+    "phoneNumber": "Nambala ya Foni",
+    "phoneNumberPlaceholder": "Lowetsani nambala",
+    "authCode": "Auth Code",
+    "authCodePlaceholder": "Lowetsani code",
+    "saveSMSInfo": "Save",
+    "savedSMSInfoAlert": "Saved:\nFoni: {{phone}}\nCode: {{authCode}}",
+    "viewInstructions": "Onani Buku",
+    "changeLanguage": "Sinthani Chiyankhulo",
+    "instructionsManual": "Buku la Malangizo",
+    "instructionsManualText": "1. Lembani zambiri za Odwala\n2. Onani zambiri zakale\n3. Pimani kulemera\n4. Sungani zambiri\n5. Zidzasungidwa zokha",
+    "close": "Tsekani"
+  },
+
+  "fetching": {
+    "title": "Sikilani...",
+    "subText": "Tikuyang'ana zambiri za",
+    "wait": "Sikilani pokopera",
+    "errorTitle": "Vuto",
+    "errorGeneric": "Zatentha",
+    "errorNotFound": "Odwala sanapezeke"
+  },
+
+  "patientInfo": {
+    "title": "Zambiri za Odwala",
+    "patientId": "ID ya Odwala",
+    "firstName": "Dzina Loyamba",
+    "lastName": "Dzina Lomaliza",
+    "dateOfBirth": "Tsiku Lobadwa",
+    "village": "Mudzi",
+    "gender": "Gender",
+    "phoneNumber": "Nambala ya Foni",
+    "growthChart": "Chati ya Kakulidwe",
+    "previousWeights": "Mbiri ya Kulemera Akale",
+    "noWeights": "Palibe Mbiri Yakale",
+    "continueToWeighing": "Pitilizani Kupima",
+    "editInfo": "Sinthani"
+  },
+
+  "patientInfoAfter": {
+    "title": "Zambiri za Odwala",
+    "patientId": "ID ya Odwala",
+    "firstName": "Dzina Loyamba",
+    "lastName": "Dzina Lomaliza",
+    "dateOfBirth": "Tsiku Lobadwa",
+    "village": "Mudzi",
+    "gender": "Gender",
+    "phoneNumber": "Nambala ya Foni",
+    "growthChart": "Chati ya Kakulidwe",
+    "analytics": "Zotsatira",
+    "recentWeightRecords": "Kulemera kwa Pano",
+    "noWeightData": "Palibe Mbiri ya Kalemedwe",
+    "saveAndFinish": "Sungani ndi Kumalizisa"
+  },
+
+  "recentPatientsScreen": {
+    "title": "Odwala Apano",
+    "empty": "Palibe Odwala",
+    "back": "Bwererani"
+  },
+
+  "chooseLanguage": {
+    "title": "Sankhani Chiyankhulo",
+    "english": "English",
+    "chichewa": "Chichewa"
+  },
+
+  "ble": {
+    "connected": "Connected",
+    "notConnected": "Not Connected",
+    "connectScale": "Connect Scale",
+    "scanning": "Sikilani...",
+    "kg": "kg",
+    "manualWeightEntry": "Lembani Kalemedwe",
+    "weightPlaceholder": "Lowetsani Kalemedwe (kg)",
+    "acceptMeasurement": "Accept",
+    "enterWeightManually": "Lembani Nokha",
+    "useScaleInstead": "Gwiritsani Scale",
+    "measurementAccepted": "Zasungidwa: {{weight}} kg",
+    "proceedToGraphing": "Pitilizani",
+    "redoMeasurement": "Pimaninso",
+    "restartPairing": "Yambaninso"
+  }
 }

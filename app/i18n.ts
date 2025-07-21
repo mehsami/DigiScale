@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import i18next, { Resource } from 'i18next';
+import i18next, { ModuleType, Resource } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from '../en.json';
 import ny from '../ny.json';
@@ -11,21 +11,31 @@ export const languageResources: Resource = {
 
 const LANGUAGE_KEY = 'user-language';
 
-const initI18n = async () => {
-  // Try to get the saved language from AsyncStorage
-  const storedLang = await AsyncStorage.getItem(LANGUAGE_KEY);
-  i18next
-    .use(initReactI18next)
-    .init({
-      lng: storedLang || 'en', // use saved or default to 'en'
-      fallbackLng: 'en',
-      resources: languageResources,
-      interpolation: {
-        escapeValue: false,
-      },
-    });
+const languageDetector = {
+  type: 'languageDetector' as ModuleType,
+  async: true,
+  detect: async (callback: (lang: string) => void) => {
+    const lang = await AsyncStorage.getItem(LANGUAGE_KEY);
+    callback(lang || 'en');
+  },
+  init: () => {},
+  cacheUserLanguage: async (lng: string) => {
+    await AsyncStorage.setItem(LANGUAGE_KEY, lng);
+  },
 };
 
-initI18n();
+i18next
+  .use(languageDetector)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: 'en',
+    resources: languageResources,
+    interpolation: {
+      escapeValue: false,
+    },
+    react: {
+      useSuspense: false,
+    },
+  });
 
 export default i18next;

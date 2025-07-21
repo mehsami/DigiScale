@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 
@@ -24,6 +25,7 @@ const convertDOB = (dob: string) => {
 };
 
 const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
+  const { t } = useTranslation();
   const [patientId, setPatientId] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -33,12 +35,14 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleNext = () => {
     if (!patientId || !firstName || !lastName) {
-      Alert.alert('Error', 'Patient ID, First Name, and Last Name are required.');
+      Alert.alert(
+        t('manualEntry.errorTitle'), 
+        t('manualEntry.errorMessage')
+      );
       return;
     }
     const convertedDOB = convertDOB(dob);
 
-    // --- Only include fields that have values, and Weight is always empty on new entry ---
     const patientRecord: any = {
       Date_of_Birth: convertedDOB,
       First_Name: firstName,
@@ -46,8 +50,8 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
     };
     if (gender) patientRecord.Gender = gender;
     if (village) patientRecord.Village = village;
-    patientRecord.Phone_Number = 96789009; // or omit/set only if available
-    patientRecord.Weight = {}; // <-- Set to empty object for new entry
+    patientRecord.Phone_Number = 96789009;
+    patientRecord.Weight = {};
 
     navigation.navigate('Fetching', { patientId, patientRecord });
   };
@@ -55,26 +59,26 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.formCard}>
-        <Text style={styles.title}>Patient Identification</Text>
+        <Text style={styles.title}>{t('manualEntry.title')}</Text>
 
         <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Patient Name</Text>
+          <Text style={styles.inputLabel}>{t('manualEntry.patientName')}</Text>
           <View style={styles.row}>
             <View style={{ flex: 1, marginRight: 8 }}>
-              <Text style={styles.inputSubLabel}>First Name</Text>
+              <Text style={styles.inputSubLabel}>{t('manualEntry.firstName')}</Text>
               <TextInput
                 style={styles.input}
-                placeholder="(e.g. Peter)"
+                placeholder={t('manualEntry.firstNamePlaceholder')}
                 placeholderTextColor="#888"
                 value={firstName}
                 onChangeText={setFirstName}
               />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.inputSubLabel}>Last Name</Text>
+              <Text style={styles.inputSubLabel}>{t('manualEntry.lastName')}</Text>
               <TextInput
                 style={styles.input}
-                placeholder="(e.g. Banda)"
+                placeholder={t('manualEntry.lastNamePlaceholder')}
                 placeholderTextColor="#888"
                 value={lastName}
                 onChangeText={setLastName}
@@ -84,10 +88,10 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Patient ID</Text>
+          <Text style={styles.inputLabel}>{t('manualEntry.patientId')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="(e.g. P001)"
+            placeholder={t('manualEntry.patientIdPlaceholder')}
             placeholderTextColor="#888"
             value={patientId}
             onChangeText={setPatientId}
@@ -95,16 +99,14 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Date of Birth</Text>
+          <Text style={styles.inputLabel}>{t('manualEntry.dateOfBirth')}</Text>
           <TextInputMask
             type={'datetime'}
-            options={{
-              format: 'DD/MM/YYYY',
-            }}
+            options={{ format: 'DD/MM/YYYY' }}
             value={dob}
             onChangeText={setDob}
             style={styles.input}
-            placeholder="(e.g. 04/07/2025)"
+            placeholder={t('manualEntry.dobPlaceholder')}
             placeholderTextColor="#888"
             keyboardType="numeric"
             maxLength={10}
@@ -112,10 +114,10 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Village</Text>
+          <Text style={styles.inputLabel}>{t('manualEntry.village')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="(e.g. Chikwawa)"
+            placeholder={t('manualEntry.villagePlaceholder')}
             placeholderTextColor="#888"
             value={village}
             onChangeText={setVillage}
@@ -123,10 +125,10 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Gender</Text>
+          <Text style={styles.inputLabel}>{t('manualEntry.gender')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="(e.g. M or F)"
+            placeholder={t('manualEntry.genderPlaceholder')}
             placeholderTextColor="#888"
             value={gender}
             onChangeText={setGender}
@@ -139,7 +141,7 @@ const ManualEntryScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleNext}
           activeOpacity={0.85}
         >
-          <Text style={styles.buttonText}>Proceed to Data Retrieval</Text>
+          <Text style={styles.buttonText}>{t('manualEntry.proceed')}</Text>
         </TouchableOpacity>
       </View>
     </View>

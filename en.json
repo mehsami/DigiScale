@@ -1,4 +1,132 @@
 {
+  "choose_language": "Choose Your Language",
   "welcome": "Welcome",
-  "choose_language": "Choose your language"
+  "home": {
+    "appName": "DigiScale",
+    "subtitle": "Child Growth Monitoring",
+    "scanBarcode": "Scan Barcode",
+    "scanPassport": "Scan Passport",
+    "manualEntry": "Manual Entry",
+    "voiceEntry": "Voice Entry",
+    "recentPatients": "Recent Patients",
+    "seeAll": "See All",
+    "noRecentPatients": "No recent patients",
+    "dobGender": "DOB: {{dob}} | {{gender}}",
+    "village": "Village: {{village}}",
+    "tabHome": "Home",
+    "tabRecentPatients": "Recent Patients",
+    "tabSettings": "Settings",
+    "qrCodeScreen": "QR Code Screen",
+    "passportScannerScreen": "Passport Scanner Screen"
+  },
+
+  "manualEntry": {
+  "title": "Patient Identification",
+  "proceed": "Proceed to Data Retrieval",
+  "errorTitle": "Error",
+  "errorMessage": "Patient ID, First Name, and Last Name are required.",
+  "patientName": "Patient Name",
+  "firstName": "First Name",
+  "firstNamePlaceholder": "(e.g. Peter)",
+  "lastName": "Last Name",
+  "lastNamePlaceholder": "(e.g. Banda)",
+  "patientId": "Patient ID",
+  "patientIdPlaceholder": "(e.g. P001)",
+  "dateOfBirth": "Date of Birth",
+  "dobPlaceholder": "(e.g. 04/07/2025)",
+  "village": "Village",
+  "villagePlaceholder": "(e.g. Chikwawa)",
+  "gender": "Gender",
+  "genderPlaceholder": "(e.g. M or F)"
+  },
+
+  "settings": {
+  "title": "Settings",
+  "bluetoothSettings": "Bluetooth Settings",
+  "pairedDevice": "Paired Device: {{name}}",
+  "noDevicePaired": "No device paired",
+  "pairDevice": "Pair Device",
+  "unpairDevice": "Unpair Device",
+  "scanningForDevices": "Scanning for devices...",
+  "smsSettings": "SMS Settings",
+  "phoneNumber": "Phone Number",
+  "phoneNumberPlaceholder": "Enter phone number",
+  "authCode": "Authentication Code",
+  "authCodePlaceholder": "Enter auth code",
+  "saveSMSInfo": "Save SMS Info",
+  "savedSMSInfoAlert": "Saved:\nPhone: {{phone}}\nAuth Code: {{authCode}}",
+  "viewInstructions": "View Instructions Manual",
+  "changeLanguage": "Change Language",
+  "instructionsManual": "Instructions Manual",
+  "instructionsManualText": "The healthcare provider should enter the patient's info first.\n\nThe user will then see previous data and proceed to weighing after pairing the scale.\n\nAs they weigh, they can save data using their phone and plot it to view analytics.\n\nThe data will automatically upload and be saved for later cases.",
+  "close": "Close"
+  },
+
+  "fetching": {
+    "title": "Fetching patient data…",
+    "subText": "Please wait while we check records for",
+    "wait": "Please wait while we check records for",
+    "errorTitle": "Error",
+    "errorGeneric": "Failed during fetch/create",
+    "errorNotFound": "Patient not found and no record supplied."
+  },
+
+  "patientInfo": {
+    "title": "Patient Details",
+    "patientId": "Patient ID",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "dateOfBirth": "Date of Birth",
+    "village": "Village",
+    "gender": "Gender",
+    "phoneNumber": "Phone Number",
+    "growthChart": "Growth Chart",
+    "previousWeights": "Previous Weight Records",
+    "noWeights": "No previous weight data found.",
+    "continueToWeighing": "Continue to Weighing",
+    "editInfo": "Edit Patient Info"
+  },
+
+   "patientInfoAfter": {
+    "title": "Patient Details",
+    "patientId": "Patient ID",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "dateOfBirth": "Date of Birth",
+    "village": "Village",
+    "gender": "Gender",
+    "phoneNumber": "Phone Number",
+    "growthChart": "Growth Chart",
+    "analytics": "Analytics",
+    "recentWeightRecords": "Recent Weight Records",
+    "noWeightData": "No weight data available.",
+    "saveAndFinish": "Save and Finish"
+  },
+
+  "recentPatientsScreen": {
+    "title": "Recent Patients",
+    "empty": "No recent patients found.",
+    "back": "Back"
+  },
+  "chooseLanguage": {
+    "title": "Choose Language",
+    "english": "English",
+    "chichewa": "Chichewa"
+  },
+  "ble": {
+    "connected": "Connected",
+    "notConnected": "Not Connected",
+    "connectScale": "Connect Scale",
+    "scanning": "Scanning for devices...",
+    "kg": "kg",
+    "manualWeightEntry": "Manual Weight Entry",
+    "weightPlaceholder": "Enter weight (kg)",
+    "acceptMeasurement": "Accept Measurement",
+    "enterWeightManually": "Enter Weight Manually",
+    "useScaleInstead": "Use Scale Instead",
+    "measurementAccepted": "Measurement Accepted: {{weight}} kg",
+    "proceedToGraphing": "Proceed to Graphing",
+    "redoMeasurement": "Redo Measurement",
+    "restartPairing": "Restart Pairing"
+  }
 }

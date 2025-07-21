@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import logo from '../assets/images/DigiScaleLogo.png';
 import { getRecentPatients, RecentPatient } from '../recPatients';
@@ -25,7 +26,7 @@ type HomeStackParamList = {
   Weighing: { patientId: string; patientRecord: any };
   PatientInfoAfter: { patientId: string; patientRecord: any; highlightWeightDate?: string };
   Fetching: { patientId: string };
-  ChooseLanguage: undefined
+  ChooseLanguage: undefined;
 };
 
 type TabParamList = {
@@ -39,6 +40,7 @@ type HomeScreenProps = {
 };
 
 function HomeScreen({ navigation }: HomeScreenProps) {
+  const { t } = useTranslation();
   const [recentPatients, setRecentPatients] = useState<RecentPatient[]>([]);
 
   useEffect(() => {
@@ -81,8 +83,8 @@ function HomeScreen({ navigation }: HomeScreenProps) {
     <ScrollView style={{ flex: 1, backgroundColor: '#f8fbfc' }} contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.headerRow}>
         <View>
-          <Text style={styles.title}>DigiScale</Text>
-          <Text style={styles.subtitle}>Child Growth Monitoring</Text>
+          <Text style={styles.title}>{t('home.appName')}</Text>
+          <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
         </View>
         <Image source={logo} style={styles.logo} />
       </View>
@@ -90,39 +92,39 @@ function HomeScreen({ navigation }: HomeScreenProps) {
         <OptionButton
           color="#2563eb"
           icon="barcode-scan"
-          label="Scan Barcode"
+          label={t('home.scanBarcode')}
           onPress={() => navigation.navigate('QRCode')}
         />
         <OptionButton
           color="#22c55e"
           icon="passport"
-          label="Scan Passport"
+          label={t('home.scanPassport')}
           onPress={() => navigation.navigate('PassportScanner')}
         />
         <OptionButton
           color="#fff"
           icon="keyboard-outline"
-          label="Manual Entry"
+          label={t('home.manualEntry')}
           onPress={() => navigation.navigate('ManualEntry')}
         />
         <OptionButton
           color="#fff"
           icon="microphone"
-          label="Voice Entry"
+          label={t('home.voiceEntry')}
           onPress={() => {/* implement voice entry navigation if available */}}
         />
       </View>
       <View style={styles.recentPatientsCard}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={styles.recentPatientsTitle}>Recent Patients</Text>
+          <Text style={styles.recentPatientsTitle}>{t('home.recentPatients')}</Text>
           {recentPatients.length > 0 && (
             <TouchableOpacity onPress={() => navigation.navigate('Recent Patients' as never)}>
-              <Text style={styles.seeAll}>See All</Text>
+              <Text style={styles.seeAll}>{t('home.seeAll')}</Text>
             </TouchableOpacity>
           )}
         </View>
         {recentPatients.length === 0 ? (
-          <Text style={styles.recentPatientsEmpty}>No recent patients</Text>
+          <Text style={styles.recentPatientsEmpty}>{t('home.noRecentPatients')}</Text>
         ) : (
           recentPatients.slice(0, 3).map((p) => (
             <TouchableOpacity
@@ -135,8 +137,14 @@ function HomeScreen({ navigation }: HomeScreenProps) {
             >
               <View>
                 <Text style={styles.patientName}>{p.name}</Text>
-                <Text style={styles.patientMeta}>DOB: {p.dob} | {p.gender || '-'}</Text>
-                {p.village && <Text style={styles.patientMeta}>Village: {p.village}</Text>}
+                <Text style={styles.patientMeta}>
+                  {t('home.dobGender', { dob: p.dob, gender: p.gender || '-' })}
+                </Text>
+                {p.village && (
+                  <Text style={styles.patientMeta}>
+                    {t('home.village', { village: p.village })}
+                  </Text>
+                )}
               </View>
               <MaterialCommunityIcons name="chevron-right" size={22} color="#b4b8c2" />
             </TouchableOpacity>
@@ -148,12 +156,15 @@ function HomeScreen({ navigation }: HomeScreenProps) {
   );
 }
 
+// Placeholders for QR and Passport screens (can translate if needed)
 function QRCodeScreen() {
-  return <View style={styles.centered}><Text>QR Code Screen</Text></View>;
+  const { t } = useTranslation();
+  return <View style={styles.centered}><Text>{t('home.qrCodeScreen', 'QR Code Screen')}</Text></View>;
 }
 
 function PassportScannerScreen() {
-  return <View style={styles.centered}><Text>Passport Scanner Screen</Text></View>;
+  const { t } = useTranslation();
+  return <View style={styles.centered}><Text>{t('home.passportScannerScreen', 'Passport Scanner Screen')}</Text></View>;
 }
 
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -177,6 +188,7 @@ function HomeStackScreen() {
 const Tab = createBottomTabNavigator<TabParamList>();
 
 export default function Home() {
+  const { t } = useTranslation();
   return (
     <BluetoothProvider>
       <Tab.Navigator
@@ -191,9 +203,39 @@ export default function Home() {
           },
         })}
       >
-        <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Recent Patients" component={RecentPatientsScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen
+          name="Home"
+          component={HomeStackScreen}
+          options={{
+            tabBarLabel: ({ focused, color }) => (
+              <Text style={{ color, fontWeight: focused ? 'bold' : 'normal' }}>
+                {t('home.tabHome', 'Home')}
+              </Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Recent Patients"
+          component={RecentPatientsScreen}
+          options={{
+            tabBarLabel: ({ focused, color }) => (
+              <Text style={{ color, fontWeight: focused ? 'bold' : 'normal' }}>
+                {t('home.tabRecentPatients', 'Recent Patients')}
+              </Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{
+            tabBarLabel: ({ focused, color }) => (
+              <Text style={{ color, fontWeight: focused ? 'bold' : 'normal' }}>
+                {t('home.tabSettings', 'Settings')}
+              </Text>
+            ),
+          }}
+        />
       </Tab.Navigator>
     </BluetoothProvider>
   );
