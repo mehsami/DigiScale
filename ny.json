@@ -1,9 +1,10 @@
 {
   "choose_language": "Sankhani Chiyankhulo",
   "welcome": "Takulandirani",
+  "proceed": "Pitilizani",
   "home": {
-    "appName": "DigiScale",
-    "subtitle": "Kuyang'anira Kukula kwa Ana",
+    "appName": "DigiSikelo",
+    "subtitle": "Kuyang'anira Kukula Kwa Ana",
     "scanBarcode": "Skani Barcode",
     "scanPassport": "Skani Pasipoti",
     "manualEntry": "Lembani Nokha",
@@ -27,17 +28,17 @@
     "errorMessage": "Chonde lowetsani ID ya Odwala, Dzina Loyamba, ndi Dzina Lomaliza zofunikira",
     "patientName": "Dzina la Odwala",
     "firstName": "Dzina Loyamba",
-    "firstNamePlaceholder": "Mwachitsanzo: Peter",
+    "firstNamePlaceholder": "(e.g. Peter)",
     "lastName": "Dzina Lomaliza",
-    "lastNamePlaceholder": "Mwachitsanzo: Banda",
+    "lastNamePlaceholder": "(e.g. Banda)",
     "patientId": "Patient ID",
-    "patientIdPlaceholder": "Mwachitsanzo: P001",
+    "patientIdPlaceholder": "(e.g. P001)",
     "dateOfBirth": "Tsiku Lobadwa",
-    "dobPlaceholder": "Mwachitsanzo: 04/07/2025",
+    "dobPlaceholder": "(e.g. 04/07/2025)",
     "village": "Mudzi",
-    "villagePlaceholder": "Mwachitsanzo: Chikwawa",
+    "villagePlaceholder": "(e.g. Chikwawa)",
     "gender": "Gender",
-    "genderPlaceholder": "M (Mwamuna) kapena F (Kazi)"
+    "genderPlaceholder": "(e.g. M (Mwamuna) kapena F (Kazi))"
   },
 
   "settings": {
@@ -45,16 +46,16 @@
     "bluetoothSettings": "Bluetooth Settings",
     "pairedDevice": "Device: {{name}}",
     "noDevicePaired": "Palibe device",
-    "pairDevice": "Pair Device",
-    "unpairDevice": "Unpair",
-    "scanningForDevices": "Sikilani...",
+    "pairDevice": "Yalumikizidwa Device",
+    "unpairDevice": "Musalumikize Device",
+    "scanningForDevices": "Kufufuza...",
     "smsSettings": "SMS Settings",
     "phoneNumber": "Nambala ya Foni",
     "phoneNumberPlaceholder": "Lowetsani nambala",
-    "authCode": "Auth Code",
+    "authCode": "Authentication Code",
     "authCodePlaceholder": "Lowetsani code",
-    "saveSMSInfo": "Save",
-    "savedSMSInfoAlert": "Saved:\nFoni: {{phone}}\nCode: {{authCode}}",
+    "saveSMSInfo": "Sungani SMS Uthenga",
+    "savedSMSInfoAlert": "Tasunga:\nFoni: {{phone}}\nCode: {{authCode}}",
     "viewInstructions": "Onani Buku",
     "changeLanguage": "Sinthani Chiyankhulo",
     "instructionsManual": "Buku la Malangizo",
@@ -63,9 +64,9 @@
   },
 
   "fetching": {
-    "title": "Sikilani...",
+    "title": "Kutenga...",
     "subText": "Tikuyang'ana zambiri za",
-    "wait": "Sikilani pokopera",
+    "wait": "Dikirani",
     "errorTitle": "Vuto",
     "errorGeneric": "Zatentha",
     "errorNotFound": "Odwala sanapezeke"
@@ -81,7 +82,7 @@
     "gender": "Gender",
     "phoneNumber": "Nambala ya Foni",
     "growthChart": "Chati ya Kakulidwe",
-    "previousWeights": "Mbiri ya Kulemera Akale",
+    "previousWeights": "Mbiri ya Kulemera Zakale",
     "noWeights": "Palibe Mbiri Yakale",
     "continueToWeighing": "Pitilizani Kupima",
     "editInfo": "Sinthani"
@@ -116,19 +117,19 @@
   },
 
   "ble": {
-    "connected": "Connected",
-    "notConnected": "Not Connected",
-    "connectScale": "Connect Scale",
-    "scanning": "Sikilani...",
+    "connected": "Sikelo Yalumikizidwa",
+    "notConnected": "Palibe Sikelo",
+    "connectScale": "Lumikizani Sikelo",
+    "scanning": "Kufufuza...",
     "kg": "kg",
     "manualWeightEntry": "Lembani Kalemedwe",
     "weightPlaceholder": "Lowetsani Kalemedwe (kg)",
-    "acceptMeasurement": "Accept",
+    "acceptMeasurement": "Vomereza Kalemedwe",
     "enterWeightManually": "Lembani Nokha",
-    "useScaleInstead": "Gwiritsani Scale",
+    "useScaleInstead": "Gwiritsani Sikelo",
     "measurementAccepted": "Zasungidwa: {{weight}} kg",
     "proceedToGraphing": "Pitilizani",
     "redoMeasurement": "Pimaninso",
     "restartPairing": "Yambaninso"
   }
-}
+}    
