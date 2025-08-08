@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/DigiScaleLogo.png",
+        "foregroundImage": "./assets/images/DigiScaleIcon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -22,7 +22,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/DigiScaleLogo.png"
+      "favicon": "./assets/images/DigiScaleIcon.png"
     },
     "plugins": [
       "expo-router",

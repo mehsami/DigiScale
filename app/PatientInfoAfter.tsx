@@ -1,6 +1,9 @@
+import { get, ref, set } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { addRecentPatient } from '../recPatients';
+import { db } from './firebaseConfig';
 import Graph, { boysPercentiles, girlsPercentiles } from './Graph';
 
 type WeightData = Record<string, number>;
@@ -31,15 +34,17 @@ const parseDOB = (dobStr: string): Date | null => {
   if (!mm || !dd || !yyyy) return null;
   return new Date(yyyy, mm - 1, dd);
 };
+
 const calculateAgeMonths = (dob: Date, weightDate: Date): number => {
   let months = (weightDate.getFullYear() - dob.getFullYear()) * 12;
   months += weightDate.getMonth() - dob.getMonth();
   if (weightDate.getDate() < dob.getDate()) months -= 1;
   return months >= 0 ? months : 0;
 };
+
 const parseWeightData = (weightData: WeightData, dob: Date | null) => {
   if (!dob) return [];
-  return Object.entries(weightData)
+  return Object.entries(weightData || {})
     .map(([dateStr, weight]) => {
       if (dateStr.length !== 8) return null;
       const mm = parseInt(dateStr.slice(0, 2), 10);
@@ -53,6 +58,7 @@ const parseWeightData = (weightData: WeightData, dob: Date | null) => {
     .filter((v): v is { ageMonths: number; weight: number; date: string } => v !== null)
     .sort((a, b) => a.ageMonths - b.ageMonths);
 };
+
 const formatDateKey = (key: string): string => {
   if (key.length !== 8) return key;
   const mm = key.slice(0, 2);
@@ -61,11 +67,70 @@ const formatDateKey = (key: string): string => {
   return `${mm}/${dd}/${yyyy}`;
 };
 
+function getWeightQuartile(
+  ageMonths: number,
+  weight: number,
+  percentiles: typeof boysPercentiles,
+  t: any
+): string {
+  function getPercVal(p: keyof typeof percentiles) {
+    const arr = percentiles[p];
+    const pt = arr.find(pt => pt.ageMonths === ageMonths);
+    return pt ? pt.weight : null;
+  }
+  const p3 = getPercVal('p3');
+  const p15 = getPercVal('p15');
+  const p50 = getPercVal('p50');
+  const p85 = getPercVal('p85');
+  const p97 = getPercVal('p97');
+
+  if (p3 == null || p15 == null || p50 == null || p85 == null || p97 == null)
+    return t('patientInfoAfter.quartile.NA');
+  if (weight < p3) return t('patientInfoAfter.quartile.below3');
+  if (weight < p15) return t('patientInfoAfter.quartile.3to15');
+  if (weight < p50) return t('patientInfoAfter.quartile.15to50');
+  if (weight < p85) return t('patientInfoAfter.quartile.50to85');
+  if (weight < p97) return t('patientInfoAfter.quartile.85to97');
+  return t('patientInfoAfter.quartile.above97');
+}
+
+function getGrowthAnalytics(weights: { weight: number; ageMonths: number }[], t: any) {
+  const sorted = [...weights].sort((a, b) => a.ageMonths - b.ageMonths);
+  const lastFour = sorted.slice(-4);
+  if (lastFour.length < 2) {
+    return {
+      status: t('patientInfoAfter.analyticsMessages.notEnoughDataStatus'),
+      description: t('patientInfoAfter.analyticsMessages.notEnoughDataDesc'),
+    };
+  }
+  const w1 = lastFour[0].weight;
+  const avg = lastFour.reduce((sum, w) => sum + w.weight, 0) / lastFour.length;
+  const growthScore = avg - w1;
+
+  if (growthScore < 0.5) {
+    return {
+      status: t('patientInfoAfter.analyticsMessages.veryDangerousStatus'),
+      description: t('patientInfoAfter.analyticsMessages.veryDangerousDesc', { w1: w1.toFixed(2), growth: growthScore.toFixed(2) }),
+    };
+  } else if (growthScore >= 0.5 && growthScore < 1) {
+    return {
+      status: t('patientInfoAfter.analyticsMessages.dangerousStatus'),
+      description: t('patientInfoAfter.analyticsMessages.dangerousDesc', { w1: w1.toFixed(2), growth: growthScore.toFixed(2) }),
+    };
+  } else {
+    return {
+      status: t('patientInfoAfter.analyticsMessages.healthyStatus'),
+      description: t('patientInfoAfter.analyticsMessages.healthyDesc', { w1: w1.toFixed(2), growth: growthScore.toFixed(2) }),
+    };
+  }
+}
+
 const PatientInfoAfter: React.FC<Props> = ({ route, navigation }) => {
   const { t } = useTranslation();
   const { patientId, patientRecord } = route.params;
   const [weightEntries, setWeightEntries] = useState<{ date: string; weight: number; ageMonths: number }[]>([]);
   const [patientWeights, setPatientWeights] = useState<{ ageMonths: number; weight: number }[]>([]);
+  const [analytics, setAnalytics] = useState<{ status: string; description: string }>({ status: '', description: '' });
 
   useEffect(() => {
     const dob = parseDOB(patientRecord.Date_of_Birth);
@@ -79,14 +144,55 @@ const PatientInfoAfter: React.FC<Props> = ({ route, navigation }) => {
         })).sort((a, b) => a.ageMonths - b.ageMonths)
       );
       setPatientWeights(parsed.map(({ ageMonths, weight }) => ({ ageMonths, weight })));
+      setAnalytics(getGrowthAnalytics(parsed, t));
     } else {
       setWeightEntries([]);
       setPatientWeights([]);
+      setAnalytics({ status: '', description: '' });
     }
-  }, [patientRecord.Weight, patientRecord.Date_of_Birth]);
+  }, [patientRecord.Weight, patientRecord.Date_of_Birth, t]);
 
   const gender = patientRecord.Gender === 'M' ? 'M' : 'F';
   const percentiles = gender === 'M' ? boysPercentiles : girlsPercentiles;
+
+  const handleSaveAndFinish = async () => {
+    try {
+      const patientRef = ref(db, `patientId/${patientId}`);
+      const snap = await get(patientRef);
+      let dbPatient: PatientRecord = snap.exists() ? snap.val() : {};
+
+      const mergedWeights = {
+        ...(dbPatient.Weight || {}),
+        ...(patientRecord.Weight || {})
+      };
+
+      const mergedPatient: PatientRecord = {
+        ...dbPatient,
+        ...patientRecord,
+        Weight: mergedWeights
+      };
+
+      console.log("Saving patientRecord:", mergedPatient);
+
+      await set(patientRef, mergedPatient);
+
+      await addRecentPatient({
+        patientId,
+        name: `${mergedPatient.First_Name} ${mergedPatient.Last_Name}`,
+        dob: mergedPatient.Date_of_Birth,
+        gender: mergedPatient.Gender,
+        date: new Date().toISOString(),
+        village: mergedPatient.Village,
+      });
+
+      navigation.navigate('Home');
+    } catch (err: any) {
+      Alert.alert(
+        t('patientInfoAfter.alerts.saveFailedTitle'),
+        err?.message || t('patientInfoAfter.alerts.saveFailedBody')
+      );
+    }
+  };
 
   const windowWidth = Dimensions.get('window').width;
   const CARD_HORIZONTAL_PADDING = 22;
@@ -121,25 +227,40 @@ const PatientInfoAfter: React.FC<Props> = ({ route, navigation }) => {
         />
       </View>
 
-      {/* If you want analytics and recent weights, include similar sections as in your old screen, but use: */}
-      {/* t('patientInfoAfter.analytics') and t('patientInfoAfter.recentWeightRecords') */}
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>{t('patientInfoAfter.analytics')}</Text>
+        <Text style={[
+          styles.analyticsStatus,
+          analytics.status === t('patientInfoAfter.analyticsMessages.healthyStatus')
+            ? { color: '#16a34a' }
+            : analytics.status === t('patientInfoAfter.analyticsMessages.veryDangerousStatus')
+              ? { color: '#dc2626' }
+              : { color: '#f59e42' }
+        ]}>
+          {analytics.status}
+        </Text>
+        <Text style={styles.analyticsDescription}>{analytics.description}</Text>
+      </View>
+
       <View style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>{t('patientInfoAfter.recentWeightRecords')}</Text>
         {weightEntries.length === 0 ? (
           <Text style={styles.empty}>{t('patientInfoAfter.noWeightData')}</Text>
         ) : (
-          weightEntries.slice(-4).map(({ date, weight }, idx) => (
+          weightEntries.slice(-4).map(({ date, weight, ageMonths }, idx) => (
             <View key={idx} style={styles.weightRow}>
               <Text style={styles.weightDate}>{date}</Text>
-              <Text style={styles.weightValue}>{weight} kg</Text>
-              {/* Quartile and analytics could be added here if needed, use same nested keys */}
+              <Text style={styles.weightValue}>{t('patientInfoAfter.weightValueKg', { weight })}</Text>
+              <Text style={styles.quartileText}>
+                {getWeightQuartile(ageMonths, weight, percentiles, t)}
+              </Text>
             </View>
           ))
         )}
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Home')}>
+        onPress={handleSaveAndFinish}>
         <Text style={styles.buttonText}>{t('patientInfoAfter.saveAndFinish')}</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -205,6 +326,17 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'right',
   },
+  analyticsStatus: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 7,
+    marginTop: 4,
+  },
+  analyticsDescription: {
+    color: '#555',
+    fontSize: 15,
+    marginBottom: 10,
+  },
   weightRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -225,6 +357,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     flex: 1,
     textAlign: 'center',
+  },
+  quartileText: {
+    color: '#888',
+    fontSize: 13,
+    flex: 1,
+    textAlign: 'right',
   },
   empty: {
     color: '#868d96',

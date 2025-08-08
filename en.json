@@ -71,24 +71,38 @@
     "errorGeneric": "Failed during fetch/create",
     "errorNotFound": "Patient not found and no record supplied."
   },
-
-  "patientInfo": {
-    "title": "Patient Details",
+"patientInfo": {
+    "title": "Patient Information",
     "patientId": "Patient ID",
     "firstName": "First Name",
+    "firstNamePlaceholder": "Enter first name",
     "lastName": "Last Name",
+    "lastNamePlaceholder": "Enter last name",
     "dateOfBirth": "Date of Birth",
+    "dobPlaceholder": "DD/MM/YYYY",
     "village": "Village",
+    "villagePlaceholder": "Enter village",
     "gender": "Gender",
-    "phoneNumber": "Phone Number",
+    "genderPlaceholder": "M/F",
     "growthChart": "Growth Chart",
-    "previousWeights": "Previous Weight Records",
-    "noWeights": "No previous weight data found.",
-    "continueToWeighing": "Continue to Weighing",
-    "editInfo": "Edit Patient Info"
+    "previousWeights": "Weight Records",
+    "noWeights": "No weights yet.",
+    "weightDatePlaceholder": "DD/MM/YYYY",
+    "weightPlaceholder": "Weight in kg",
+    "add": "Add",
+    "delete": "Delete",
+    "editInfo": "Edit Info",
+    "saveAndContinue": "Save & Continue",
+    "errorTitle": "Error",
+    "errorMessage": "Please fill all required fields and use DD/MM/YYYY for date.",
+    "weightErrorTitle": "Weight Entry Error",
+    "weightErrorMessage": "Enter a valid date (DD/MM/YYYY) and weight.",
+    "duplicateWeightTitle": "Duplicate",
+    "duplicateWeightMessage": "Weight for this date already exists.",
+    "continueToWeighing": "Continue to Weighing"
   },
 
-   "patientInfoAfter": {
+    "patientInfoAfter": {
     "title": "Patient Details",
     "patientId": "Patient ID",
     "firstName": "First Name",
@@ -98,10 +112,34 @@
     "gender": "Gender",
     "phoneNumber": "Phone Number",
     "growthChart": "Growth Chart",
-    "analytics": "Analytics",
+    "analytics": "Growth Analytics",
     "recentWeightRecords": "Recent Weight Records",
-    "noWeightData": "No weight data available.",
-    "saveAndFinish": "Save and Finish"
+    "noWeightData": "No weight data found.",
+    "saveAndFinish": "Save and Finish",
+    "weightValueKg": "{{weight}} kg",
+    "quartile": {
+      "NA": "N/A",
+      "below3": "Below 3rd percentile",
+      "3to15": "3rd-15th percentile",
+      "15to50": "15th-50th percentile",
+      "50to85": "50th-85th percentile",
+      "85to97": "85th-97th percentile",
+      "above97": "Above 97th percentile"
+    },
+    "analyticsMessages": {
+      "notEnoughDataStatus": "Not enough data",
+      "notEnoughDataDesc": "At least 2 weight records are needed for analytics.",
+      "veryDangerousStatus": "Very Dangerous",
+      "veryDangerousDesc": "There has been almost no healthy growth since {{w1}}kg. (Growth: {{growth}}kg)",
+      "dangerousStatus": "Dangerous",
+      "dangerousDesc": "Limited healthy growth since {{w1}}kg. (Growth: {{growth}}kg)",
+      "healthyStatus": "Healthy",
+      "healthyDesc": "Healthy growth since {{w1}}kg! (Growth: {{growth}}kg)"
+    },
+    "alerts": {
+      "saveFailedTitle": "Save Failed",
+      "saveFailedBody": "Could not save data. Please try again."
+    }
   },
 
   "recentPatientsScreen": {

@@ -76,16 +76,32 @@
     "title": "Zambiri za Odwala",
     "patientId": "ID ya Odwala",
     "firstName": "Dzina Loyamba",
+    "firstNamePlaceholder": "(e.g. Peter)",
     "lastName": "Dzina Lomaliza",
+    "lastNamePlaceholder": "(e.g. Banda)",
     "dateOfBirth": "Tsiku Lobadwa",
+    "dobPlaceholder": "(e.g. 04/07/2025)",
     "village": "Mudzi",
+    "villagePlaceholder": "(e.g. Chikwawa)",
     "gender": "Gender",
+    "genderPlaceholder": "(e.g. M (Mwamuna) kapena F (Kazi))",
     "phoneNumber": "Nambala ya Foni",
     "growthChart": "Chati ya Kakulidwe",
     "previousWeights": "Mbiri ya Kulemera Zakale",
     "noWeights": "Palibe Mbiri Yakale",
-    "continueToWeighing": "Pitilizani Kupima",
-    "editInfo": "Sinthani"
+    "weightDatePlaceholder": "DD/MM/YYYY",
+    "weightPlaceholder": "Kulemera (kg)",
+    "add": "Onjezani",
+    "delete": "Chotsani",
+    "editInfo": "Sinthani",
+    "saveAndContinue": "Sungani ndi Pitilizani",
+    "errorTitle": "Vuto",
+    "errorMessage": "Chonde lembani magawo onse ofunikira ndipo gwiritsani ntchito fomati ya DD/MM/YYYY pa tsiku lobadwa.",
+    "weightErrorTitle": "Vuto pa Kulemera",
+    "weightErrorMessage": "Lowetsani tsiku lolondola (DD/MM/YYYY) ndi kulemera kolondola.",
+    "duplicateWeightTitle": "Kubwereza",
+    "duplicateWeightMessage": "Kulemera kwa tsikuli kulipo kale.",
+    "continueToWeighing": "Pitilizani Kupima"
   },
 
   "patientInfoAfter": {
@@ -98,10 +114,34 @@
     "gender": "Gender",
     "phoneNumber": "Nambala ya Foni",
     "growthChart": "Chati ya Kakulidwe",
-    "analytics": "Zotsatira",
-    "recentWeightRecords": "Kulemera kwa Pano",
-    "noWeightData": "Palibe Mbiri ya Kalemedwe",
-    "saveAndFinish": "Sungani ndi Kumalizisa"
+    "analytics": "Zotsatira za Kukula",
+    "recentWeightRecords": "Mbiri ya Kulemera Pano",
+    "noWeightData": "Palibe Mbiri ya Kulemera",
+    "saveAndFinish": "Sungani ndi Kumalizitsa",
+    "weightValueKg": "{{weight}} kg",
+    "quartile": {
+      "NA": "Sikupezeka",
+      "below3": "Pansi pa peresenti 3",
+      "3to15": "Peresenti 3-15",
+      "15to50": "Peresenti 15-50",
+      "50to85": "Peresenti 50-85",
+      "85to97": "Peresenti 85-97",
+      "above97": "Pamwamba pa peresenti 97"
+    },
+    "analyticsMessages": {
+      "notEnoughDataStatus": "Palibe deta yokwanira",
+      "notEnoughDataDesc": "Muyenera kulemba kulemera koposa kawiri kuti muone kusintha.",
+      "veryDangerousStatus": "Zoopsa Kwambiri",
+      "veryDangerousDesc": "Palibe kusintha kwa kulemera kuchokera {{w1}}kg. (Kusintha: {{growth}}kg)",
+      "dangerousStatus": "Zoopsa",
+      "dangerousDesc": "Kusintha kwa kulemera kochepa kuchokera {{w1}}kg. (Kusintha: {{growth}}kg)",
+      "healthyStatus": "Kukula Kwabwino",
+      "healthyDesc": "Kukula kwabwino kuchokera {{w1}}kg! (Kusintha: {{growth}}kg)"
+    },
+    "alerts": {
+      "saveFailedTitle": "Kusunga Kwalephera",
+      "saveFailedBody": "Zalephera kusunga deta. Chonde yesani kachiwiri."
+    }
   },
 
   "recentPatientsScreen": {
